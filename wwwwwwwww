@@ -1,0 +1,360 @@
+local v0 = {Bank=CFrame.new(-(1687.53 - (13 + 1224)), 830.57 - (368 + 423), -(879.86 - 599)),MilitaryBase=CFrame.new(56.53 - (10 + 8), 211.57 - 156, -(1262.8600000000001 - (416 + 26))),Revolver=CFrame.new(-(2107.5323486328125 - 1447), 22.568477630615234 + 28, -(230.8551940917969 - 100)),Uphill=CFrame.new(918.5323486328125 - (145 + 293), 520.5684776306152 - (44 + 386), -(2128.855194091797 - (998 + 488))),HighArmor=CFrame.new(-(297.5323486328125 + 636), -(21.568477630615234 + 4), 1335.8551940917969 - (201 + 571)),Mask=CFrame.new(-(1345.5323486328125 - (116 + 1022)), 95.56847763061523 - 72, -(480.8551940917969 + 337)),School=CFrame.new(-(2190.5323486328125 - 1590), 248.56847763061523 - 178, 1179.8551940917969 - (814 + 45)),Downhill=CFrame.new(-(1426.5323486328125 - 847), 1.5684776306152344 + 6, -(260.8551940917969 + 475))};
+local v1 = Instance.new("ScreenGui");
+v1.Name = "DaHoodTeleportMenu";
+v1.Parent = game.Players.LocalPlayer.PlayerGui;
+local v5 = Instance.new("Frame");
+v5.Size = UDim2.new(885 - (261 + 624), 1021 - 446, 1080 - (1020 + 60), 1998 - (630 + 793));
+v5.Position = UDim2.new(0.5 - 0, -(1358.5 - 1071), 0.5 + 0, -(988.5 - 701));
+v5.BackgroundColor3 = Color3.fromRGB(1777 - (760 + 987), 1943 - (1789 + 124), 796 - (745 + 21));
+v5.BorderSizePixel = 0 + 0;
+v5.Active = true;
+v5.Draggable = true;
+v5.Visible = true;
+v5.Parent = v1;
+local function v14(v65, v66)
+	local v67 = 0 - 0;
+	local v68;
+	while true do
+		if (v67 == (0 - 0)) then
+			v68 = Instance.new("UICorner");
+			v68.CornerRadius = UDim.new(0 + 0, v66);
+			v67 = 1 + 0;
+		end
+		if (v67 == (1056 - (87 + 968))) then
+			v68.Parent = v65;
+			break;
+		end
+	end
+end
+v14(v5, 52 - 40);
+local v15 = Instance.new("Frame");
+v15.Size = UDim2.new(1 + 0, 0 - 0, 1413 - (447 + 966), 109 - 69);
+v15.Position = UDim2.new(1817 - (1703 + 114), 701 - (376 + 325), 0 - 0, 0 - 0);
+v15.BackgroundColor3 = Color3.fromRGB(6 + 14, 44 - 24, 34 - (9 + 5));
+v15.BorderSizePixel = 376 - (85 + 291);
+v15.Parent = v5;
+local function v21(v69, v70, v71)
+	local v72 = 1265 - (243 + 1022);
+	local v73;
+	while true do
+		if (v72 == (11 - 8)) then
+			v14(v73, 10 + 2);
+			return v73;
+		end
+		if (v72 == (1182 - (1123 + 57))) then
+			v73.Font = Enum.Font.GothamSemibold;
+			v73.TextSize = 15 + 3;
+			v73.Parent = v15;
+			v72 = 257 - (163 + 91);
+		end
+		if (v72 == (1930 - (1869 + 61))) then
+			v73 = Instance.new("TextButton");
+			v73.Text = v69;
+			v73.Size = UDim2.new(0.5 + 0, 0 - 0, 1 - 0, 0 + 0);
+			v72 = 1 - 0;
+		end
+		if (v72 == (1 + 0)) then
+			v73.Position = v70;
+			v73.BackgroundColor3 = (v71 and Color3.fromRGB(1583 - (1329 + 145), 1067 - (140 + 831), 1989 - (1409 + 441))) or Color3.fromRGB(748 - (15 + 703), 14 + 16, 468 - (262 + 176));
+			v73.TextColor3 = (v71 and Color3.fromRGB(1976 - (345 + 1376), 943 - (198 + 490), 1126 - 871)) or Color3.fromRGB(359 - 209, 1356 - (696 + 510), 314 - 164);
+			v72 = 1264 - (1091 + 171);
+		end
+	end
+end
+local v22 = v21("PINGU GUI", UDim2.new(0 + 0, 0 - 0, 0 - 0, 374 - (123 + 251)), true);
+local v23 = v21("Teleports", UDim2.new(0.5 - 0, 698 - (208 + 490), 0 + 0, 0 + 0), false);
+local v24 = Instance.new("Frame");
+v24.Size = UDim2.new(837 - (660 + 176), 0 + 0, 203 - (14 + 188), -(715 - (534 + 141)));
+v24.Position = UDim2.new(0 + 0, 0 + 0, 0 + 0, 126 - 66);
+v24.BackgroundColor3 = Color3.fromRGB(31 - 11, 56 - 36, 11 + 9);
+v24.BorderSizePixel = 0 + 0;
+v24.Visible = true;
+v24.Parent = v5;
+local function v31()
+	for v92, v93 in ipairs(v24:GetChildren()) do
+		v93:Destroy();
+	end
+end
+local function v32()
+	local v74 = 396 - (115 + 281);
+	local v75;
+	local v76;
+	local v77;
+	local v78;
+	while true do
+		if (v74 == (9 - 5)) then
+			v77.Font = Enum.Font.GothamBold;
+			v77.TextSize = 22 + 4;
+			v77.Parent = v24;
+			v78 = Instance.new("TextLabel");
+			v78.Text = "discord.gg/TsrHmKKcMC";
+			v78.Size = UDim2.new(2 - 1, 0 - 0, 867 - (550 + 317), 28 - 8);
+			v74 = 7 - 2;
+		end
+		if ((2 - 1) == v74) then
+			v75.Font = Enum.Font.GothamBold;
+			v75.TextSize = 320 - (134 + 151);
+			v75.Parent = v24;
+			v76 = Instance.new("TextLabel");
+			v76.Text = "P I N G U   G U I !";
+			v76.Size = UDim2.new(1666 - (970 + 695), 0 - 0, 1990.2 - (582 + 1408), 0 - 0);
+			v74 = 2 - 0;
+		end
+		if (v74 == (7 - 5)) then
+			v76.Position = UDim2.new(1824 - (1195 + 629), 0 - 0, 241.3 - (187 + 54), 780 - (162 + 618));
+			v76.BackgroundTransparency = 1 + 0;
+			v76.TextColor3 = Color3.fromRGB(170 + 85, 543 - 288, 428 - 173);
+			v76.Font = Enum.Font.GothamBold;
+			v76.TextSize = 3 + 32;
+			v76.Parent = v24;
+			v74 = 1639 - (1373 + 263);
+		end
+		if ((1005 - (451 + 549)) == v74) then
+			v78.Position = UDim2.new(0 + 0, 0 - 0, 0.54 - 0, 1384 - (746 + 638));
+			v78.BackgroundTransparency = 1 + 0;
+			v78.TextColor3 = Color3.fromRGB(0 - 0, 503 - (218 + 123), 1836 - (1535 + 46));
+			v78.TextXAlignment = Enum.TextXAlignment.Center;
+			v78.Font = Enum.Font.GothamBold;
+			v78.TextSize = 16 + 0;
+			v74 = 1 + 5;
+		end
+		if (v74 == (563 - (306 + 254))) then
+			v77 = Instance.new("TextLabel");
+			v77.Text = "Join the discord!";
+			v77.Size = UDim2.new(1 + 0, 0 - 0, 1467 - (899 + 568), 14 + 6);
+			v77.Position = UDim2.new(0 - 0, 603 - (268 + 335), 290.48 - (60 + 230), 572 - (426 + 146));
+			v77.BackgroundTransparency = 1 + 0;
+			v77.TextColor3 = Color3.fromRGB(1711 - (282 + 1174), 1066 - (569 + 242), 734 - 479);
+			v74 = 1 + 3;
+		end
+		if (v74 == (1030 - (706 + 318))) then
+			v78.Parent = v24;
+			break;
+		end
+		if (v74 == (1251 - (721 + 530))) then
+			v75 = Instance.new("TextLabel");
+			v75.Text = "W e l c o m e   t o";
+			v75.Size = UDim2.new(1272 - (945 + 326), 0 - 0, 0.4 + 0, 700 - (271 + 429));
+			v75.Position = UDim2.new(0 + 0, 1500 - (1408 + 92), 1086.1 - (461 + 625), 1288 - (993 + 295));
+			v75.BackgroundTransparency = 1 + 0;
+			v75.TextColor3 = Color3.fromRGB(1426 - (418 + 753), 98 + 157, 27 + 228);
+			v74 = 1 + 0;
+		end
+	end
+end
+v32();
+local v33 = Instance.new("Frame");
+v33.Size = UDim2.new(1 + 0, 529 - (406 + 123), 1770 - (1749 + 20), -(10 + 30));
+v33.Position = UDim2.new(1322 - (1249 + 73), 0 + 0, 1145 - (466 + 679), 96 - 56);
+v33.BackgroundColor3 = Color3.fromRGB(57 - 37, 1920 - (106 + 1794), 7 + 13);
+v33.BorderSizePixel = 0 + 0;
+v33.Visible = false;
+v33.Parent = v5;
+local function v40(v79)
+	local v80 = 0 - 0;
+	local v81;
+	local v82;
+	while true do
+		if (v80 == (2 - 1)) then
+			return v81[v82] == true;
+		end
+		if ((114 - (4 + 110)) == v80) then
+			v81 = {["5532032650"]=true,["5647816399"]=true,["3516679608"]=true,["5620337828"]=true,["5725427285"]=true};
+			v82 = tostring(v79.UserId);
+			v80 = 585 - (57 + 527);
+		end
+	end
+end
+local function v41(v83)
+	local v84 = 1427 - (41 + 1386);
+	local v85;
+	while true do
+		if (v84 == (103 - (17 + 86))) then
+			v85 = game.Players.LocalPlayer;
+			if v40(v85) then
+				local v162 = 0 + 0;
+				local v163;
+				while true do
+					if (v162 == (0 - 0)) then
+						v163 = v85.Character;
+						if (v163 and v163:FindFirstChild("HumanoidRootPart")) then
+							v163.HumanoidRootPart.CFrame = v83;
+						end
+						break;
+					end
+				end
+			else
+				local v164 = 0 - 0;
+				local v165;
+				while true do
+					if (v164 == (167 - (122 + 44))) then
+						v165.BackgroundColor3 = Color3.fromRGB(51 - 21, 99 - 69, 25 + 5);
+						v165.TextColor3 = Color3.fromRGB(37 + 218, 101 - 51, 115 - (30 + 35));
+						v165.Font = Enum.Font.GothamBold;
+						v165.TextSize = 13 + 5;
+						v164 = 1259 - (1043 + 214);
+					end
+					if (v164 == (7 - 5)) then
+						v165.Parent = v5;
+						wait(1217 - (323 + 889));
+						v165:Destroy();
+						break;
+					end
+					if (v164 == (0 - 0)) then
+						v165 = Instance.new("TextLabel");
+						v165.Text = "You are not whitelisted, dm mxhakon for whitelist.";
+						v165.Size = UDim2.new(580 - (361 + 219), 750 - (53 + 267), 0 + 0, 453 - (15 + 398));
+						v165.Position = UDim2.new(982.39 - (18 + 964), -(564 - 414), 0.95 + 0, -(29 + 16));
+						v164 = 851 - (20 + 830);
+					end
+				end
+			end
+			break;
+		end
+	end
+end
+local function v42()
+	local v86 = 0 + 0;
+	local v87;
+	while true do
+		if (v86 == (126 - (116 + 10))) then
+			v87 = nil;
+			function v87(v157, v158, v159)
+				local v160 = 0 + 0;
+				local v161;
+				while true do
+					if (v160 == (739 - (542 + 196))) then
+						v161.BackgroundColor3 = Color3.fromRGB(233 - 124, 29 + 67, 71 + 68);
+						v161.TextColor3 = Color3.fromRGB(92 + 163, 671 - 416, 653 - 398);
+						v161.Font = Enum.Font.GothamSemibold;
+						v161.TextSize = 1567 - (1126 + 425);
+						v160 = 407 - (118 + 287);
+					end
+					if (v160 == (0 - 0)) then
+						v161 = Instance.new("TextButton");
+						v161.Text = v157;
+						v161.Size = UDim2.new(1121.4 - (118 + 1003), 0 - 0, 377 - (142 + 235), 181 - 141);
+						v161.Position = v158;
+						v160 = 1 + 0;
+					end
+					if (v160 == (979 - (553 + 424))) then
+						v161.Parent = v33;
+						v14(v161, 14 - 6);
+						v161.MouseButton1Click:Connect(function()
+							v41(v159);
+						end);
+						break;
+					end
+				end
+			end
+			v86 = 1 + 0;
+		end
+		if (v86 == (4 + 0)) then
+			v87("Teleport to Downhill", UDim2.new(0.54 + 0, 0 + 0, 0.5 + 0, 0 - 0), v0.Downhill);
+			v87("Teleport to School", UDim2.new(0.04 - 0, 0 - 0, 0.65 + 0, 0 - 0), v0.School);
+			break;
+		end
+		if (v86 == (755 - (239 + 514))) then
+			v87("Teleport to Bank", UDim2.new(0.04 + 0, 1329 - (797 + 532), 0.2 + 0, 0 + 0), v0.Bank);
+			v87("Teleport to Military Base", UDim2.new(0.54 - 0, 1202 - (373 + 829), 731.2 - (476 + 255), 1130 - (369 + 761)), v0.MilitaryBase);
+			v86 = 2 + 1;
+		end
+		if (v86 == (1 - 0)) then
+			v87("Teleport to Mask", UDim2.new(0.04 - 0, 238 - (64 + 174), 0.05 + 0, 0 - 0), v0.Mask);
+			v87("Teleport to High Armor", UDim2.new(336.54 - (144 + 192), 216 - (42 + 174), 0.05 + 0, 0 + 0), v0.HighArmor);
+			v86 = 1 + 1;
+		end
+		if (v86 == (1507 - (363 + 1141))) then
+			v87("Teleport to Revolver", UDim2.new(1580.04 - (1183 + 397), 0 - 0, 0.35 + 0, 0 + 0), v0.Revolver);
+			v87("Teleport to Uphill", UDim2.new(1975.04 - (1913 + 62), 0 + 0, 0.5 - 0, 1933 - (565 + 1368)), v0.Uphill);
+			v86 = 15 - 11;
+		end
+	end
+end
+v22.MouseButton1Click:Connect(function()
+	local v88 = 1661 - (1477 + 184);
+	while true do
+		if (v88 == (3 - 0)) then
+			v24.Visible = true;
+			v33.Visible = false;
+			break;
+		end
+		if (v88 == (0 + 0)) then
+			v22.BackgroundColor3 = Color3.fromRGB(965 - (564 + 292), 164 - 68, 418 - 279);
+			v22.TextColor3 = Color3.fromRGB(559 - (244 + 60), 197 + 58, 731 - (41 + 435));
+			v88 = 1002 - (938 + 63);
+		end
+		if (v88 == (2 + 0)) then
+			v31();
+			v32();
+			v88 = 1128 - (936 + 189);
+		end
+		if (v88 == (1 + 0)) then
+			v23.BackgroundColor3 = Color3.fromRGB(1643 - (1565 + 48), 19 + 11, 1168 - (782 + 356));
+			v23.TextColor3 = Color3.fromRGB(417 - (176 + 91), 390 - 240, 221 - 71);
+			v88 = 1094 - (975 + 117);
+		end
+	end
+end);
+v23.MouseButton1Click:Connect(function()
+	local v89 = 1875 - (157 + 1718);
+	while true do
+		if (v89 == (3 + 0)) then
+			v24.Visible = false;
+			v33.Visible = true;
+			break;
+		end
+		if (v89 == (0 - 0)) then
+			v23.BackgroundColor3 = Color3.fromRGB(372 - 263, 1114 - (697 + 321), 378 - 239);
+			v23.TextColor3 = Color3.fromRGB(539 - 284, 587 - 332, 100 + 155);
+			v89 = 1 - 0;
+		end
+		if (v89 == (5 - 3)) then
+			v31();
+			v42();
+			v89 = 1230 - (322 + 905);
+		end
+		if (v89 == (612 - (602 + 9))) then
+			v22.BackgroundColor3 = Color3.fromRGB(1219 - (449 + 740), 902 - (826 + 46), 977 - (245 + 702));
+			v22.TextColor3 = Color3.fromRGB(473 - 323, 49 + 101, 2048 - (260 + 1638));
+			v89 = 442 - (382 + 58);
+		end
+	end
+end);
+local v43 = Instance.new("TextButton");
+v43.Text = "Close";
+v43.Size = UDim2.new(0.1 - 0, 0 + 0, 0 - 0, 118 - 78);
+v43.Position = UDim2.new(1205.45 - (902 + 303), 0 - 0, 2 - 1, -(5 + 45));
+v43.BackgroundColor3 = Color3.fromRGB(1799 - (1121 + 569), 310 - (22 + 192), 822 - (483 + 200));
+v43.TextColor3 = Color3.fromRGB(1718 - (1404 + 59), 697 - 442, 342 - 87);
+v43.Font = Enum.Font.GothamSemibold;
+v43.TextSize = 781 - (468 + 297);
+v43.Parent = v5;
+v14(v43, 570 - (334 + 228));
+local v53 = Instance.new("TextLabel");
+v53.Text = "Made by Pingu";
+v53.Size = UDim2.new(0.5 - 0, 0 - 0, 0 - 0, 6 + 14);
+v53.Position = UDim2.new(236.5 - (141 + 95), 0 + 0, 2.05 - 1, -(168 - 98));
+v53.BackgroundTransparency = 1 + 0;
+v53.TextColor3 = Color3.fromRGB(698 - 443, 180 + 75, 133 + 122);
+v53.Font = Enum.Font.GothamSemibold;
+v53.TextSize = 19 - 5;
+v53.Parent = v5;
+local v62 = game:GetService("UserInputService");
+local v63 = true;
+v62.InputBegan:Connect(function(v90, v91)
+	if (not v91 and (v90.KeyCode == Enum.KeyCode.RightShift)) then
+		local v94 = 0 + 0;
+		while true do
+			if (v94 == (163 - (92 + 71))) then
+				v63 = not v63;
+				v5.Visible = v63;
+				break;
+			end
+		end
+	end
+end);
+local function v64()
+	v1:Destroy();
+end
+v43.MouseButton1Click:Connect(v64);
