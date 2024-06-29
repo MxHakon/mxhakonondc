@@ -1,4 +1,62 @@
-local G = game
+getgenv().SharpSSilent = {
+    Enabled = true,  -- [Enable or disable the silent aim script]
+    Keybind = "C",  -- [Keybind to toggle the silent aim]
+    ToggleNotification = true,  -- [Show a notification when toggling]
+    WallCheck = true,  -- [Check for walls between player and target]
+    Prediction = {
+        Horizontal = 0.1215,  -- [Horizontal prediction adjustment]
+        Vertical = 0.1215,  -- [Vertical prediction adjustment]
+        Resolver = true,  -- [Enable or disable resolver to correct aim]
+    },
+    Targeting = {
+        TargetMode = "Closest",  -- [Mode of targeting: "Closest" or "HitPart"]
+        ClosestHitPoint = false,  -- [Use closest hit point on parts if true]
+        HitPart = "Head",  -- ["Head", "Torso", "HumanoidRootPart", "LeftArm", "RightArm", "LeftLeg", "RightLeg", "LowerRightLeg", "LowerLeftLeg"]
+        UntargetOnFall = true,  -- [Untarget player if they fall]
+        FallThreshold = 0.5  -- [Time after which to untarget falling players (in seconds)]
+    },
+    Humanization = {
+        Enabled = false,  -- [Enable humanization for more legit movement]
+        TargetSwitchDuration = 0.5,  -- [Delay between target switches (in seconds)]
+        HumanizationFactor = 0.5  -- [Adjust how legit the movement looks, range from 0 to 1]
+    },
+    FovSettings = {
+        FovVisible = true,  -- [Show the Field of View (FOV) circle]
+        FovRadius = 90,  -- [Radius of the FOV circle]
+        FovThickness = 1,  -- [Thickness of the FOV circle line]
+        FovTransparency = 1,  -- [Transparency of the FOV circle]
+        FovColor = Color3.fromRGB(0, 255, 255),  -- [Color of the FOV circle]
+ 
+ 
+        Filled = false,  -- [Fill the FOV circle]
+        FillTransparency = 0.3,  -- [Transparency of the filled FOV circle]
+        FovShape = "Circle",  -- [Shape of the FOV circle: "Circle", "Square", "Triangle"]
+        FovBorderColor = Color3.fromRGB(0, 32, 96),  -- [Border color of the FOV circle]
+        FovBorderThickness = 2,  -- [Thickness of the FOV circle border]
+        DynamicFOV = {
+            Enabled = true,  -- [Enable dynamic FOV adjustment]
+            Type = "Speed",  -- [Type of dynamic adjustment: "Speed" or "Health"]
+            MinFOV = 120,  -- [Minimum FOV value]
+            MaxFOV = 120,  -- [Maximum FOV value]
+            SpeedThreshold = 16,  -- [Speed at which FOV reaches MaxFOV]
+            HealthThreshold = 50,  -- [Health percentage at which FOV reaches MaxFOV]
+        }
+    },
+    HitPoint = {
+        ShowHitPoint = true,  -- [Show hit point marker]
+        HitPointRadius = 4,  -- [Radius of the hit point marker]
+        HitPointThickness = 1,  -- [Thickness of the hit point marker]
+        HitPointColor = Color3.fromRGB(0, 162, 232),  -- [Color of the hit point marker]
+        HitPointTransparency = 0.2,  -- [Transparency of the hit point marker]
+    },
+    Watermark = {
+        Enabled = true,  -- [Enable or disable the watermark]
+        Sound = true,  -- [Enable or disable the sound]
+        Music = false,  -- [Enable or disable the music]
+    }
+ }
+ 
+ local G = game
 local Run_Service = G:GetService("RunService")
 local Players = G:GetService("Players")
 local UserInputService = G:GetService("UserInputService")
@@ -486,5 +544,3 @@ end
 sendNotification("dc.gg/TsrHmKKcMC", "♣️ #1 Triggerbot", "rbxassetid://17561420493")
 wait(3)
 sendNotification("dc.gg/TsrHmKKcMC", "♣️ Supports Solara", "rbxassetid://17561420493")
-
-showWatermark()
