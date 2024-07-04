@@ -1,1 +1,460 @@
-w
+-- Services
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+
+-- Variables
+local guiInstance = nil
+local aimlockEnabled = false
+local skeletonEspEnabled = false
+local tracersEnabled = false
+local namesEnabled = false
+local espFolder = nil
+local fovCircle = nil
+local fovRadius =80 -- Adjusted FOV radius in pixels to 120 degrees
+local fovCircleTransparency = 0.3 -- Adjusted transparency of the FOV circle to 30% (0 = fully opaque, 1 = fully transparent)
+local fovCircleThickness = 1 -- Thickness of the FOV circle lines (adjust as needed)
+local smoothness = 10 -- Default smoothness value
+local prediction = 0.1 -- Default prediction value
+
+-- Store the current target for aimlock
+local currentTarget = nil
+
+-- Function to create and show the GUI
+local function createGui()
+    -- Destroy existing GUI if it exists
+    if guiInstance then
+        guiInstance:Destroy()
+        guiInstance = nil
+    end
+
+    -- Create the new GUI instance
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "CustomGUI"
+    gui.ResetOnSpawn = false
+    gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling -- Ensure GUI is on top
+
+    -- Attempt to parent the GUI to the player's PlayerGui (local script context)
+    local player = Players.LocalPlayer
+    if not player then
+        warn("LocalPlayer not found.")
+        return
+    end
+
+    local playerGui = player:FindFirstChildOfClass("PlayerGui")
+    if not playerGui then
+        warn("PlayerGui not found for LocalPlayer.")
+        return
+    end
+
+    gui.Parent = playerGui
+
+    -- Create the main frame
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 300, 0, 300) -- Size of 300x300 pixels
+    frame.Position = UDim2.new(0.5, -150, 0.5, -150) -- Centered position
+    frame.BackgroundColor3 = Color3.fromRGB(33, 33, 33) -- Dark gray color
+    frame.BorderColor3 = Color3.new(1, 1, 1) -- White outline
+    frame.BorderSizePixel = 3 -- Thick outline (adjust as needed)
+    frame.Active = true -- Allow dragging
+    frame.Draggable = true -- Make draggable
+    frame.Parent = gui
+
+
+
+
+    
+    -- Create rounded corners using a UICorner for the main frame
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 10) -- Radius of 10 pixels
+    corner.Parent = frame
+    
+    -- Add the "Not made by Pinguin" text label at the top of the frame
+    local madeByLabel = Instance.new("TextLabel")
+    madeByLabel.Name = "MadeByLabel"
+    madeByLabel.Text = "Not made by Pinguin"
+    madeByLabel.Size = UDim2.new(1, -10, 0, 30) -- Full width with padding, height of 30 pixels
+    madeByLabel.Position = UDim2.new(0, 5, -0.045, 5) -- Top-centered position with padding
+    madeByLabel.TextColor3 = Color3.new(1, 1, 1) -- White text color
+    madeByLabel.BackgroundTransparency = 1 -- Transparent background
+    madeByLabel.Font = Enum.Font.SourceSansBold
+    madeByLabel.TextSize = 18 -- Text size of 18 points
+    madeByLabel.TextScaled = true -- Scale text to fit label size
+    madeByLabel.Parent = frame
+    
+    -- Function to toggle button state
+    local function toggleButton(button)
+        if button.Text == "OFF" then
+            button.Text = "ON"
+            button.BackgroundColor3 = Color3.fromRGB(0, 255, 0) -- Green color
+        else
+            button.Text = "OFF"
+            button.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Red color
+        end
+    end
+
+    -- Create buttons with specific texts aligned to the right
+    local buttonInfo = {
+        {text = "Aimlock"},
+        {text = "Skeleton"},
+        {text = "Tracers"},
+        {text = "Names"}
+    }
+
+    local buttonInstances = {}
+
+    for i, info in ipairs(buttonInfo) do
+        local button = Instance.new("TextButton")
+        button.Name = "Button" .. i
+        button.Text = "OFF"
+        button.Size = UDim2.new(0.5, -5, 0, 50) -- Button size
+        button.Position = UDim2.new(0, 5, 0, 20 + (i - 1) * 70) -- Vertical spacing
+        button.AnchorPoint = Vector2.new(0, 0) -- Anchor to top left
+        button.TextColor3 = Color3.new(1, 1, 1) -- Text color
+        button.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Red color
+        button.BorderSizePixel = 0 -- No border
+        button.Parent = frame
+
+        -- Apply smooth corners to the button
+        local buttonCorner = Instance.new("UICorner")
+        buttonCorner.CornerRadius = UDim.new(0, 10)
+        buttonCorner.Parent = button
+
+        -- Create text label for button
+        local textLabel = Instance.new("TextLabel")
+        textLabel.Name = "TextLabel"
+        textLabel.Text = info.text
+        textLabel.Size = UDim2.new(0.5, -5, 1, 0) -- Text label size
+        textLabel.Position = UDim2.new(1, 5, 0, 0) -- Right-aligned position
+        textLabel.AnchorPoint = Vector2.new(1, 0) -- Anchor to top right
+        textLabel.TextColor3 = Color3.new(1, 1, 1) -- Text color
+        textLabel.BackgroundTransparency = 1 -- Transparent background
+        textLabel.Font = Enum.Font.SourceSansBold
+        textLabel.TextSize = 14 -- Text size reduced by 2 points
+        textLabel.Parent = button
+
+        -- Connect button click event
+        button.MouseButton1Click:Connect(function()
+            toggleButton(button)
+            if i == 1 then -- Aimlock button
+                aimlockEnabled = not aimlockEnabled
+                if aimlockEnabled then
+                    if not fovCircle then
+                        fovCircle = Drawing.new("Circle")
+                        fovCircle.Transparency = fovCircleTransparency
+                        fovCircle.Radius = fovRadius -- FOV radius in pixels (adjust as needed)
+                        fovCircle.Color = Color3.new(1, 1, 1)
+                        fovCircle.Thickness = fovCircleThickness
+                        fovCircle.NumSides = 36
+                    end
+                    fovCircle.Visible = true
+                else
+                    if fovCircle then
+                        fovCircle.Visible = false
+                    end
+                    currentTarget = nil -- Reset current target when aimlock is turned off
+                end
+            elseif i == 2 then -- Skeleton button
+                skeletonEspEnabled = not skeletonEspEnabled
+            elseif i == 3 then -- Tracers button
+                tracersEnabled = not tracersEnabled
+            elseif i == 4 then -- Names button
+                namesEnabled = not namesEnabled
+            end
+        end)
+
+        -- Store button instance
+        table.insert(buttonInstances, button)
+    end
+
+    -- Add Smoothness Input
+    local smoothnessLabel = Instance.new("TextLabel")
+    smoothnessLabel.Name = "SmoothnessLabel"
+    smoothnessLabel.Text = "Smoothness"
+    smoothnessLabel.Size = UDim2.new(0.5, -5, 0, 20) -- Label size
+    smoothnessLabel.Position = UDim2.new(0, -7, 1, -50) -- Bottom-left position
+    smoothnessLabel.AnchorPoint = Vector2.new(0, 1) -- Anchor to bottom-left
+    smoothnessLabel.TextColor3 = Color3.new(1, 1, 1) -- Text color
+    smoothnessLabel.BackgroundTransparency = 1 -- Transparent background
+    smoothnessLabel.Font = Enum.Font.SourceSansBold
+    smoothnessLabel.TextSize = 14 -- Text size reduced by 2 points
+    smoothnessLabel.Parent = frame
+
+    local smoothnessTextbox = Instance.new("TextBox")
+    smoothnessTextbox.Name = "SmoothnessTextbox"
+    smoothnessTextbox.Text = smoothness
+    smoothnessTextbox.Size = UDim2.new(0.5, -5, 0, 20) -- Textbox size
+    smoothnessTextbox.Position = UDim2.new(1, -3, 1, -50) -- Bottom-right position
+    smoothnessTextbox.AnchorPoint = Vector2.new(1, 1) -- Anchor to bottom-right
+    smoothnessTextbox.TextColor3 = Color3.new(1, 1, 1) -- Text color
+    smoothnessTextbox.BackgroundColor3 = Color3.fromRGB(60, 60, 60) -- Dark gray background
+    smoothnessTextbox.BorderSizePixel = 0 -- No border
+    smoothnessTextbox.Font = Enum.Font.SourceSansBold
+    smoothnessTextbox.TextSize = 14 -- Text size reduced by 2 points
+    smoothnessTextbox.Parent = frame
+
+    -- Function to handle smoothness textbox input
+    smoothnessTextbox.FocusLost:Connect(function()
+        local newSmoothness = tonumber(smoothnessTextbox.Text)
+        if newSmoothness then
+            smoothness = math.clamp(newSmoothness, 0, 25) -- Clamp smoothness between 0 and 25
+        else
+            smoothnessTextbox.Text = smoothness -- Revert to previous smoothness if input is invalid
+        end
+    end)
+
+    -- Add Prediction Input
+    local predictionLabel = Instance.new("TextLabel")
+    predictionLabel.Name = "PredictionLabel"
+    predictionLabel.Text = "Prediction"
+    predictionLabel.Size = UDim2.new(0.5, -5, 0, 20) -- Label size
+    predictionLabel.Position = UDim2.new(0, -7, 1, -80) -- Bottom-left position
+    predictionLabel.AnchorPoint = Vector2.new(0, 1) -- Anchor to bottom-left
+    predictionLabel.TextColor3 = Color3.new(1, 1, 1) -- Text color
+    predictionLabel.BackgroundTransparency = 1 -- Transparent background
+    predictionLabel.Font = Enum.Font.SourceSansBold
+    predictionLabel.TextSize = 14 -- Text size reduced by 2 points
+    predictionLabel.Parent = frame
+
+    local predictionTextbox = Instance.new("TextBox")
+    predictionTextbox.Name = "PredictionTextbox"
+    predictionTextbox.Text = prediction
+    predictionTextbox.Size = UDim2.new(0.5, -5, 0, 20) -- Textbox size
+    predictionTextbox.Position = UDim2.new(1, -3, 1, -80) -- Bottom-right position
+    predictionTextbox.AnchorPoint = Vector2.new(1, 1) -- Anchor to bottom-right
+    predictionTextbox.TextColor3 = Color3.new(1, 1, 1) -- Text color
+    predictionTextbox.BackgroundColor3 = Color3.fromRGB(60, 60, 60) -- Dark gray background
+    predictionTextbox.BorderSizePixel = 0 -- No border
+    predictionTextbox.Font = Enum.Font.SourceSansBold
+    predictionTextbox.TextSize = 14 -- Text size reduced by 2 points
+    predictionTextbox.Parent = frame
+
+    -- Function to handle prediction textbox input
+    predictionTextbox.FocusLost:Connect(function()
+        local newPrediction = tonumber(predictionTextbox.Text)
+        if newPrediction then
+            prediction = math.clamp(newPrediction, 0, 10) -- Clamp prediction between 0 and 10
+        else
+            predictionTextbox.Text = prediction -- Revert to previous prediction if input is invalid
+        end
+    end)
+
+    -- Function to handle right control input for GUI visibility toggle
+    local function onKeyPress(input)
+        if input.KeyCode == Enum.KeyCode.RightControl then
+            frame.Visible = not frame.Visible
+        end
+    end
+
+    -- Connect the input service for key press detection
+    UserInputService.InputBegan:Connect(onKeyPress)
+
+    -- Assign the created GUI instance to the global variable
+    guiInstance = gui
+end
+
+-- Function to update ESP features (skeleton, tracers, names)
+local function updateEsp()
+    -- Clean up previous ESP elements
+    if espFolder then
+        espFolder:ClearAllChildren()
+    else
+        espFolder = Instance.new("Folder")
+        espFolder.Name = "ESPFolder"
+        espFolder.Parent = game.CoreGui
+    end
+
+    -- Get local player and camera
+    local player = Players.LocalPlayer
+    local camera = Workspace.CurrentCamera
+
+    if not player or not camera then
+        return
+    end
+
+    -- Skeleton ESP
+    if skeletonEspEnabled then
+        for _, target in pairs(Players:GetPlayers()) do
+            if target ~= player and target.Character then
+                local humanoid = target.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid and humanoid.Health > 0 then
+                    local rootPart = target.Character:FindFirstChild("HumanoidRootPart")
+                    local head = target.Character:FindFirstChild("Head")
+
+                    if rootPart and head then
+                        local rootPosition, onScreenRoot = camera:WorldToViewportPoint(rootPart.Position)
+                        local headPosition, onScreenHead = camera:WorldToViewportPoint(head.Position)
+
+                        if onScreenRoot and onScreenHead then
+                            -- Draw skeleton lines
+                            local line = Instance.new("Frame")
+                            line.BorderSizePixel = 0
+                            line.BackgroundColor3 = Color3.new(1, 1, 1)
+                            line.Size = UDim2.new(0, math.abs(rootPosition.X - headPosition.X), 0, math.abs(rootPosition.Y - headPosition.Y))
+                            line.Position = UDim2.new(0, math.min(rootPosition.X, headPosition.X), 0, math.min(rootPosition.Y, headPosition.Y))
+                            line.Parent = espFolder
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    -- Tracers ESP
+    if tracersEnabled then
+        for _, target in pairs(Players:GetPlayers()) do
+            if target ~= player and target.Character then
+                local humanoid = target.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid and humanoid.Health > 0 then
+                    local rootPart = target.Character:FindFirstChild("HumanoidRootPart")
+
+                    if rootPart then
+                        local rootPosition, onScreenRoot = camera:WorldToViewportPoint(rootPart.Position)
+
+                        if onScreenRoot then
+                            -- Draw tracer lines
+                            local line = Instance.new("Frame")
+                            line.BorderSizePixel = 0
+                            line.BackgroundColor3 = Color3.new(1, 1, 1)
+                            line.Size = UDim2.new(0, 2, 0, 2000) -- Tracer length
+                            line.Position = UDim2.new(0, rootPosition.X, 0, rootPosition.Y)
+                            line.Parent = espFolder
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    -- Names ESP
+    if namesEnabled then
+        for _, target in pairs(Players:GetPlayers()) do
+            if target ~= player and target.Character then
+                local humanoid = target.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid and humanoid.Health > 0 then
+                    local head = target.Character:FindFirstChild("Head")
+
+                    if head then
+                        local headPosition, onScreenHead = camera:WorldToViewportPoint(head.Position)
+
+                        if onScreenHead then
+                            -- Draw name labels
+                            local billboardGui = Instance.new("BillboardGui")
+                            billboardGui.Size = UDim2.new(0, 100, 0, 40)
+                            billboardGui.Adornee = head
+                            billboardGui.AlwaysOnTop = true
+                            billboardGui.StudsOffset = Vector3.new(0, 2, 0)
+                            billboardGui.Parent = espFolder
+
+                            local nameLabel = Instance.new("TextLabel")
+                            nameLabel.Size = UDim2.new(1, 0, 1, 0)
+                            nameLabel.BackgroundTransparency = 1
+                            nameLabel.Text = target.Name
+                            nameLabel.TextColor3 = Color3.new(1, 1, 1)
+                            nameLabel.Font = Enum.Font.SourceSansBold
+                            nameLabel.TextSize = 16
+                            nameLabel.Parent = billboardGui
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+-- Function to aimlock at nearest target within FOV
+local function aimlock()
+    local player = Players.LocalPlayer
+    local camera = Workspace.CurrentCamera
+
+    if not player or not camera then
+        return
+    end
+
+    -- Exit if already targeting someone
+    if currentTarget then
+        return
+    end
+
+    local closestTarget = nil
+    local closestDistance = math.huge
+
+    -- Find closest target within FOV
+    for _, target in pairs(Players:GetPlayers()) do
+        if target ~= player and target.Character then
+            local humanoid = target.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid and humanoid.Health > 0 then
+                local rootPart = target.Character:FindFirstChild("HumanoidRootPart")
+
+                if rootPart then
+                    local rootPosition, onScreenRoot = camera:WorldToViewportPoint(rootPart.Position)
+
+                    if onScreenRoot then
+                        local screenCenter = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+                        local targetPos = Vector2.new(rootPosition.X, rootPosition.Y)
+                        local distanceFromCenter = (screenCenter - targetPos).magnitude
+
+                        -- Check if target is within the FOV radius
+                        if distanceFromCenter <= fovRadius and distanceFromCenter < closestDistance then
+                            closestDistance = distanceFromCenter
+                            closestTarget = rootPart
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    -- Aim at closest target if found
+    if closestTarget then
+        currentTarget = closestTarget
+    end
+end
+
+-- Connect to RenderStepped for continuous update of FOV circle and ESP features
+RunService.RenderStepped:Connect(function()
+    if aimlockEnabled and fovCircle then
+        local camera = Workspace.CurrentCamera
+        local viewportSize = camera.ViewportSize
+        fovCircle.Position = Vector2.new(viewportSize.X / 2, viewportSize.Y / 2)
+    end
+
+    updateEsp()
+
+    -- Aimlock logic when "V" key is pressed
+    if UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2) then
+        aimlock()
+    else
+        currentTarget = nil -- Reset current target when aimlock key is released
+    end
+
+    -- Update aimlock target
+    if currentTarget and aimlockEnabled then
+        local player = Players.LocalPlayer
+        local camera = Workspace.CurrentCamera
+
+        if not player or not camera then
+            return
+        end
+
+        local rootPosition, onScreenRoot = camera:WorldToViewportPoint(currentTarget.Position)
+
+        -- Check if the current target is still within FOV and visible on screen
+        if onScreenRoot then
+            -- Aim at current target
+            local lookAtPosition = currentTarget.Position
+            local direction = (lookAtPosition - camera.CFrame.Position).unit
+            local lookRotation = CFrame.new(camera.CFrame.Position, camera.CFrame.Position + direction)
+
+            -- Update camera rotation to aim at target
+            camera.CFrame = CFrame.new(camera.CFrame.Position, lookAtPosition)
+        else
+            -- Lost sight of the current target, reset aimlock
+            currentTarget = nil
+        end
+    end
+end)
+
+-- Main script logic
+createGui()
