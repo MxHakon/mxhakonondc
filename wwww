@@ -423,7 +423,7 @@ RunService.RenderStepped:Connect(function()
     updateEsp()
 
     -- Aimlock logic when "V" key is pressed
-    if UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2) then
+    if UserInputService:IsKeyDown(Enum.KeyCode.V) then
         aimlock()
     else
         currentTarget = nil -- Reset current target when aimlock key is released
@@ -458,3 +458,4 @@ end)
 
 -- Main script logic
 createGui()
+
